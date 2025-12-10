@@ -27,7 +27,7 @@ pipeline {
                     # Create temporary container
                     docker create --name temp-nginx nginx:alpine
 
-                    # Copy all files from repo into nginx html folder
+                    # Copy static files into nginx html folder
                     docker cp . temp-nginx:/usr/share/nginx/html/
 
                     # Commit the container as new image
@@ -38,7 +38,8 @@ pipeline {
                     docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
 
                     # Cleanup temporary container
-                   
+                    docker rm temp-nginx
+                    docker logout
                     """
                 }
             }
@@ -48,6 +49,8 @@ pipeline {
     post {
         success {
             echo "Docker image ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} pushed successfully!"
+            echo "You can run it locally with:"
+            echo "docker run -p 8080:80 ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}"
         }
         failure {
             echo 'Pipeline failed.'
