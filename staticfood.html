@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Organic Gold Kitchen — Animated</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#fffaf3;         /* warm cream */
+    --bg-2:#f3f9ee;         /* soft organic light green */
+    --card-bg: rgba(255,255,255,0.10);
+    --glass-border: rgba(255,215,130,0.28);
+    --gold: #d4a24c;
+    --gold-strong: #ffd36a;
+    --green-dark: #2f3d2f;
+    --glass-shadow: rgba(0,0,0,0.22);
+  }
+
+  *{box-sizing:border-box; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+  html,body{height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+  
+  /* NEW PREMIUM BACKGROUND */
+ body{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(66, 57, 193, 0.45), transparent 70%),
+    radial-gradient(circle at 50% 80%, rgba(27, 20, 217, 0.35), transparent 65%),
+    linear-gradient(135deg, #e9ffe9, #d5f8d5, #e9ffe9);
+
+  background-attachment: fixed;
+  
+  /* TEXT COLORS UPDATED FOR LIGHT BG */
+  color: #1f3b24;   /* rich natural green */
+}
+
+/* Update headings to match the new green theme */
+header h1{
+  color:#1f3b24;
+}
+header p{
+  color:#d4a24c; /* gold stays */
+}
+
+.section-title{
+  color:#1f3b24;
+}
+
+.card-title{
+  color:#1f3b24;
+}
+
+.card-desc{
+  color: rgba(31,59,36,0.75);
+}
+
+footer{
+  color: rgba(31,59,36,0.75);
+}
+
+  /* Page container */
+  .wrap{
+    max-width:1200px;margin:32px auto;padding:20px;
+  }
+
+  /* Header */
+  header{
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    padding:36px 20px;border-radius:14px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.60), rgba(255,255,255,0.40));
+    box-shadow: 0 8px 26px rgba(0,0,0,0.07);
+    border:1px solid rgba(0,0,0,0.04);
+    backdrop-filter: blur(8px);
+  }
+  header h1{font-family:'Playfair Display',serif;margin:0;font-size:40px;color:#2d3b2d;letter-spacing:1px}
+  header p{margin:0;color:var(--gold);font-weight:600}
+
+  /* Section title */
+  .section-title{
+    margin:34px 0 18px;text-align:center;
+    font-family:'Playfair Display',serif;color:var(--green-dark);
+    font-size:28px;position:relative;
+  }
+  .section-title::after{
+    content:"";display:block;width:90px;height:3px;margin:12px auto 0;background:linear-gradient(90deg,var(--gold),var(--gold-strong));
+    border-radius:2px;
+  }
+
+  /* Grid */
+  .food-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap:26px;
+    padding: 4px;
+  }
+
+  /* Glass Card */
+  .card{
+    perspective: 1200px;
+  }
+  .card-inner{
+    position:relative;
+    border-radius:16px;
+    overflow:hidden;
+    transform-style: preserve-3d;
+    transition: transform 300ms cubic-bezier(.2,.9,.3,1), box-shadow 300ms;
+    background: rgba(255,255,255,0.08);
+    border:1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px var(--glass-shadow);
+  }
+
+  .card:hover .card-inner{ transform: translateY(-12px) rotateX(6deg) rotateY(-4deg); box-shadow: 0 20px 40px rgba(0,0,0,0.18); }
+
+  .card-media{
+    width:100%;height:200px;overflow:hidden;
+    display:block;background:#ddd;
+  }
+  .card-media img{width:100%;height:100%;object-fit:cover;display:block;transition: transform 500ms, filter 300ms; filter:brightness(0.95); }
+  .card:hover .card-media img{ transform: scale(1.05); filter:brightness(1); }
+
+  .card-content{
+    padding:18px;text-align:center;position:relative;z-index:2;
+  }
+  .card-title{font-family:'Playfair Display',serif;font-size:20px;margin:6px 0;color:var(--green-dark)}
+  .card-desc{font-size:13px;color:rgba(45,59,45,0.75);margin-bottom:10px}
+  .card-price{display:block;color:var(--gold);font-weight:700;font-size:18px;margin-bottom:12px}
+
+  .btn{
+    display:inline-block;padding:10px 18px;border-radius:10px;font-weight:600;text-decoration:none;
+    background: linear-gradient(180deg,var(--gold),var(--gold-strong)); color:#1f1b18;border: none;cursor:pointer;
+    box-shadow: 0 6px 18px rgba(212,162,76,0.22), inset 0 -3px 0 rgba(0,0,0,0.04);
+    transition: transform 160ms, box-shadow 160ms;
+  }
+  .btn:hover{ transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,162,76,0.28); }
+
+  /* Floating animation */
+  .float-in{
+    opacity:0; transform: translateY(18px) scale(0.99);
+    animation: floatIn 700ms forwards cubic-bezier(.2,.9,.3,1);
+  }
+  .float-delay-1{ animation-delay: 80ms }
+  .float-delay-2{ animation-delay: 160ms }
+  .float-delay-3{ animation-delay: 240ms }
+  .float-delay-4{ animation-delay: 320ms }
+  .float-delay-5{ animation-delay: 400ms }
+  .float-delay-6{ animation-delay: 480ms }
+
+  @keyframes floatIn{
+    to{opacity:1; transform: translateY(0) scale(1)}
+  }
+
+  footer{
+    margin-top:40px;padding:20px;text-align:center;color:rgba(45,59,45,0.8);font-size:14px;
+  }
+</style>
+
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Organic Gold Kitchen</h1>
+      <p>Luxury Veg • Glassy UI • Animated Experience</p>
+    </header>
+
+    <h2 class="section-title">Chef's Curated Veg Selection</h2>
+
+    <div class="food-grid" id="grid">
+
+      <!-- Cards (only the Unsplash image URLs you approved) -->
+      <div class="card float-in float-delay-1" data-tilt>
+        <div class="card-inner">
+          <div class="card-media"><img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" alt="Veg Platter"></div>
+          <div class="card-content">
+            <div class="card-title">Royal Veg Platter</div>
+            <div class="card-desc">A luxurious assortment of seasonal vegetables & artisanal dips.</div>
+            <div class="card-price">₹260</div>
+            <button class="btn">Order Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card float-in float-delay-2" data-tilt>
+        <div class="card-inner">
+          <div class="card-media"><img src="https://static.vecteezy.com/system/resources/thumbnails/047/734/497/small/enjoy-the-delicious-flavors-of-a-vegetarian-pizza-with-fresh-tomatoes-onions-and-green-peas-on-a-crispy-crust-from-a-nearby-pizzeria-add-basil-herbs-parsley-and-spices-for-an-extra-kick-photo.jpg" alt="Veg Pizza"></div>
+          <div class="card-content">
+            <div class="card-title">Golden Veg Cheese Pizza</div>
+            <div class="card-desc">Stone-baked base, heirloom tomatoes, creamy cheese & basil.</div>
+            <div class="card-price">₹350</div>
+            <button class="btn">Order Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card float-in float-delay-3" data-tilt>
+        <div class="card-inner">
+          <div class="card-media"><img src="https://img.freepik.com/premium-photo/paneer-tikka-wooden-board_1234738-364499.jpg" alt="Paneer Tikka"></div>
+          <div class="card-content">
+            <div class="card-title">Paneer Tikka Royale</div>
+            <div class="card-desc">Smoky marinated paneer grilled to perfection with spices.</div>
+            <div class="card-price">₹320</div>
+            <button class="btn">Order Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card float-in float-delay-4" data-tilt>
+        <div class="card-inner">
+          <div class="card-media"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd" alt="Salad"></div>
+          <div class="card-content">
+            <div class="card-title">Luxury Garden Salad</div>
+            <div class="card-desc">Crisp greens, candied nuts, citrus vinaigrette — pure freshness.</div>
+            <div class="card-price">₹180</div>
+            <button class="btn">Order Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card float-in float-delay-5" data-tilt>
+        <div class="card-inner">
+          <div class="card-media"><img src="https://t4.ftcdn.net/jpg/09/03/58/39/360_F_903583907_DyMlrV7AKojDaSxeePGyjYlMNdie2eXj.jpg" alt="Veg Noodles"></div>
+          <div class="card-content">
+            <div class="card-title">Spicy Veg Noodles</div>
+            <div class="card-desc">Wok-tossed noodles with crisp veg & house chili glaze.</div>
+            <div class="card-price">₹160</div>
+            <button class="btn">Order Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card float-in float-delay-6" data-tilt>
+        <div class="card-inner">
+          <div class="card-media"><img src="https://images.unsplash.com/photo-1551218808-94e220e084d2" alt="Veg Soup"></div>
+          <div class="card-content">
+            <div class="card-title">Creamy Veg Soup</div>
+            <div class="card-desc">Silky seasonal veg soup finished with truffle oil.</div>
+            <div class="card-price">₹140</div>
+            <button class="btn">Order Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- optional extra two -->
+      <div class="card float-in" data-tilt>
+        <div class="card-inner">
+          <div class="card-media"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187" alt="Veg Sandwich"></div>
+          <div class="card-content">
+            <div class="card-title">Gourmet Veg Sandwich</div>
+            <div class="card-desc">Multigrain, roasted veg, avocado & herb aioli.</div>
+            <div class="card-price">₹170</div>
+            <button class="btn">Order Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card float-in" data-tilt>
+        <div class="card-inner">
+          <div class="card-media"><img src="https://media.istockphoto.com/id/509409312/photo/whole-wheat-fusilli-pasta-with-vegetables.jpg?s=612x612&w=0&k=20&c=Dwmq0NgYiA7oZcULyZll-AvDA9FW-XWD6sqSWLCnHjE=" alt="Pasta"></div>
+          <div class="card-content">
+            <div class="card-title">Herbed Veg Pasta</div>
+            <div class="card-desc">Tagliatelle tossed with roasted veg & basil cream.</div>
+            <div class="card-price">₹210</div>
+            <button class="btn">Order Now</button>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- grid -->
+
+    <footer>© 2025 Organic Gold Kitchen — Naturally Luxurious</footer>
+  </div>
+
+<script>
+/* Simple 3D tilt effect for cards. Works on mouse move and touch.
+   Lightweight and dependency-free. */
+(function(){
+  const cards = document.querySelectorAll('[data-tilt]');
+  const maxTilt = 12; // degrees
+  const perspective = 900;
+
+  function handleMove(e, el){
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const pointerX = (e.touches ? e.touches[0].clientX : e.clientX);
+    const pointerY = (e.touches ? e.touches[0].clientY : e.clientY);
+    const dx = pointerX - cx;
+    const dy = pointerY - cy;
+    const tiltX = (dy / (rect.height/2)) * maxTilt;
+    const tiltY = -(dx / (rect.width/2)) * maxTilt;
+    const inner = el.querySelector('.card-inner');
+    inner.style.transform = `perspective(${perspective}px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(6px)`;
+  }
+
+  function handleEnter(e, el){
+    el.querySelector('.card-inner').style.transition = 'transform 150ms ease';
+  }
+  function handleLeave(e, el){
+    const inner = el.querySelector('.card-inner');
+    inner.style.transition = 'transform 400ms cubic-bezier(.2,.9,.3,1)';
+    inner.style.transform = '';
+  }
+
+  cards.forEach((card)=>{
+    card.addEventListener('mousemove', (e)=> handleMove(e, card));
+    card.addEventListener('touchmove', (e)=> handleMove(e, card), {passive:true});
+    card.addEventListener('mouseenter', (e)=> handleEnter(e, card));
+    card.addEventListener('touchstart', (e)=> handleEnter(e, card), {passive:true});
+    card.addEventListener('mouseleave', (e)=> handleLeave(e, card));
+    card.addEventListener('touchend', (e)=> handleLeave(e, card));
+  });
+})();
+</script>
+</body>
+</html>
