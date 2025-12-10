@@ -7,10 +7,6 @@ pipeline {
         IMAGE_NAME = 'static-webpage'
         IMAGE_TAG = 'latest'
     }
-
-    tools{
-        maven 'maven''
-    }
     stages {
 
         stage('Checkout') {
