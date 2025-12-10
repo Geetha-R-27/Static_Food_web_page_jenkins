@@ -17,36 +17,36 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building Docker image...'
-                sh """
-                    docker build -t ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} .
-                """
-            }
-        }
-
-        stage('Login to Docker Hub') {
+        stage('Build and Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                }
-            }
-        }
+                    sh """
+                    # Pull base nginx image
+                    docker pull nginx:alpine
 
-        stage('Push Docker Image') {
-            steps {
-                echo 'Pushing Docker image to Docker Hub...'
-                sh "docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    # Create temporary container
+                    docker create --name temp-nginx nginx:alpine
+
+                    # Copy all files from repo into nginx html folder
+                    docker cp . temp-nginx:/usr/share/nginx/html/
+
+                    # Commit the container as new image
+                    docker commit temp-nginx ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+
+                    # Login and push to Docker Hub
+                    echo \$PASSWORD | docker login -u \$USERNAME --password-stdin
+                    docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
+
+                    # Cleanup temporary container
+                    docker rm temp-nginx
+                    docker logout
+                    """
+                }
             }
         }
     }
 
     post {
-        always {
-            echo 'Cleaning up...'
-            sh 'docker logout'
-        }
         success {
             echo "Docker image ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} pushed successfully!"
         }
