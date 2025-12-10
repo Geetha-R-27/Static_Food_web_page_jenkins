@@ -16,7 +16,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Cloning repository...'
-                git 'https://github.com/yourusername/your-repo.git'  // Replace with your repo
+                git 'https://github.com/Geetha-R-27/Static_Food_web_page_jenkins.git'  // Replace with your repo
             }
         }
 
