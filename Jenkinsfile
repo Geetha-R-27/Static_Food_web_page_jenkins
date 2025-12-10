@@ -38,8 +38,7 @@ pipeline {
                     docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
 
                     # Cleanup temporary container
-                    docker rm temp-nginx
-                    docker logout
+                   
                     """
                 }
             }
