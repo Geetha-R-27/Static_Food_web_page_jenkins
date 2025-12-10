@@ -6,10 +6,10 @@ pipeline {
         DOCKERHUB_USERNAME = 'geethar27'
         IMAGE_NAME = 'static-webpage'
         IMAGE_TAG = 'latest'
+        HOST_PORT = '8080'   // Port on the Jenkins host to access the container
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 echo 'Cloning repository...'
@@ -21,13 +21,16 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh """
+                    # Remove any existing temp container
+                    docker rm -f temp-nginx || true
+
                     # Pull base nginx image
                     docker pull nginx:alpine
 
                     # Create temporary container
                     docker create --name temp-nginx nginx:alpine
 
-                    # Copy static files into nginx html folder
+                    # Copy all repo files into nginx html folder
                     docker cp . temp-nginx:/usr/share/nginx/html/
 
                     # Commit the container as new image
@@ -37,9 +40,14 @@ pipeline {
                     echo \$PASSWORD | docker login -u \$USERNAME --password-stdin
                     docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
 
-                    # Cleanup temporary container
+                    # Remove temporary container
                     docker rm temp-nginx
-                    docker logout
+
+                    # Stop any previously running container
+                    docker rm -f ${IMAGE_NAME} || true
+
+                    # Run container from new image
+                    docker run -d --name ${IMAGE_NAME} -p ${HOST_PORT}:80 ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}
                     """
                 }
             }
@@ -48,9 +56,7 @@ pipeline {
 
     post {
         success {
-            echo "Docker image ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} pushed successfully!"
-            echo "You can run it locally with:"
-            echo "docker run -p 8080:80 ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}"
+            echo "Docker image ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} pushed and running on port ${HOST_PORT}!"
         }
         failure {
             echo 'Pipeline failed.'
