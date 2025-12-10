@@ -7,35 +7,36 @@ pipeline {
         IMAGE_NAME = 'static-webpage'
         IMAGE_TAG = 'latest'
     }
+
     stages {
 
         stage('Checkout') {
             steps {
                 echo 'Cloning repository...'
-               git branch: 'main', url: 'https://github.com/Geetha-R-27/Static_Food_web_page_jenkins.git'  // Replace with your repo
+                git branch: 'main', url: 'https://github.com/Geetha-R-27/Static_Food_web_page_jenkins.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                script {
-                    docker.build("${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}")
-                }
+                sh """
+                    docker build -t ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG} .
+                """
             }
         }
 
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
+                    sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
                 }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                echo 'Pushing image to Docker Hub...'
+                echo 'Pushing Docker image to Docker Hub...'
                 sh "docker push ${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
